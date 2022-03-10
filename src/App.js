@@ -1,24 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import * as Sentry from "@sentry/react";
+import { useState } from "react";
+import "./App.css";
+
+console.log(process.env.REACT_APP_DSN);
+
+Sentry.init({
+  dsn: process.env.REACT_APP_DSN,
+});
 
 function App() {
+  const [msg, setMsg] = useState("Works");
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Sentry.ErrorBoundary
+      fallback={({ eventId }) => {
+        return (
+          <p>
+            Search Sentry for <code>event.id: {eventId}</code>
+          </p>
+        );
+      }}
+    >
+      <div>{msg}</div>
+      <button
+        onClick={() => {
+          setMsg({ message: "This will break" });
+        }}
+      >
+        Click to trigger error
+      </button>
+    </Sentry.ErrorBoundary>
   );
 }
 
