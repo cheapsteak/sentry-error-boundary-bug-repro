@@ -2,6 +2,10 @@ import * as Sentry from "@sentry/react";
 import { useState } from "react";
 import "./App.css";
 
+if (!process.env.REACT_APP_DSN) {
+  alert(`Please set environment variable "REACT_APP_DSN"`)
+}
+
 console.log(process.env.REACT_APP_DSN);
 
 Sentry.init({
